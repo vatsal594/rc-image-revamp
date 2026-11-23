@@ -20,12 +20,21 @@
     <div class="progress"><div class="bar"><span id="barfill"></span></div><b id="prog">0 / 0</b></div>
     <button class="btn ghost" id="btnReset">Reset</button>
     <button class="btn ghost" id="btnCopy">Copy summary</button>
-    <button class="btn" id="btnExport">Download CSV</button>
+    <button class="btn ghost" id="btnExport">Download CSV</button>
+    <a class="btn" href="#submitBox">Submit</a>
   </div>
 </header>
 <nav class="tabs" id="tabs"></nav>
 <main id="slots"></main>
 <section class="summary" id="summary"></section>
+<section class="submit" id="submitBox">
+  <div>
+    <h2>Done? Send your choices</h2>
+    <p class="muted">This opens your email app with a ready message to Vatsal containing your approvals and comments. Just press Send.</p>
+    <p class="muted" id="submitWarn"></p>
+  </div>
+  <button class="btn big" id="btnSubmit">Send my choices to Vatsal</button>
+</section>
 <div class="lightbox" id="lb" hidden>
   <button class="lb-close" id="lbClose" aria-label="Close">&times;</button>
   <button class="lb-nav prev" id="lbPrev" aria-label="Previous">&#8249;</button>

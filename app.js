@@ -97,6 +97,7 @@
     $('#prog').textContent = `${done} / ${SLOTS.length}`;
     $('#barfill').style.width = (SLOTS.length ? (100 * done) / SLOTS.length : 0) + '%';
     renderSummary();
+    if (typeof updateWarn === 'function') updateWarn();
   }
 
   function rows() {
@@ -143,6 +144,42 @@
     a.href = URL.createObjectURL(new Blob([csv], { type: 'text/csv' }));
     a.download = 'image-approvals.csv';
     a.click();
+  };
+
+  const TO = 'vatsal.savani@newfold.com';
+  function submitText() {
+    const lines = [];
+    let page = '';
+    rows().forEach((x) => {
+      if (x.page !== page) { lines.push('', `== ${x.page} ==`); page = x.page; }
+      const bits = [x.approved || 'not decided'];
+      if (x.more) bits.push('GENERATE MORE');
+      if (x.comment) bits.push('Comment: ' + x.comment.replace(/\s+/g, ' '));
+      lines.push(`${x.code}: ${bits.join(' | ')}`);
+    });
+    return `Image revamp approvals from ${st.reviewer || '(no name)'}\n` + lines.join('\n').trim() + '\n\nPage: ' + location.href.split('#')[0];
+  }
+  function updateWarn() {
+    const left = SLOTS.filter((s) => !decided(s)).length;
+    $('#submitWarn').textContent = left ? `${left} slot${left > 1 ? 's' : ''} not decided yet (you can still send).` : '';
+  }
+  $('#btnSubmit').onclick = () => {
+    if (!st.reviewer) {
+      const n = prompt('Your name (so Vatsal knows who sent this):', '');
+      if (n === null) return;
+      st.reviewer = n.trim(); $('#reviewer').value = st.reviewer; save();
+    }
+    const subject = `Image revamp approvals - ${st.reviewer || 'reviewer'}`;
+    let body = submitText();
+    const full = body;
+    let url = `mailto:${TO}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+    if (url.length > 1900) {
+      body = 'My full list is on the clipboard - please paste it below (Ctrl+V).\n\n';
+      url = `mailto:${TO}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+      if (navigator.clipboard) navigator.clipboard.writeText(full).then(() => toast('List copied - paste it into the email'), () => prompt('Copy this into the email:', full));
+      else prompt('Copy this into the email:', full);
+    }
+    window.location.href = url;
   };
 
   let lb = [], li = 0;

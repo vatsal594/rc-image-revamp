@@ -53,10 +53,16 @@ main{max-width:1400px;margin:0 auto;padding:8px 24px 40px}
 .morebtn{border:1px solid var(--line);background:#fff;border-radius:8px;padding:8px 12px;cursor:pointer;font:inherit;font-size:13px}
 .morebtn.on{background:var(--lav);border-color:var(--v-l);color:var(--v-d);font-weight:600}
 .status.more{color:var(--v-d);background:var(--lav);padding:2px 8px;border-radius:10px;margin-left:6px}
-.summary{max-width:1400px;margin:0 auto 60px;padding:0 24px}
+.summary{max-width:1400px;margin:0 auto 60px;padding:0 24px;overflow-x:auto}
 .summary table{width:100%;border-collapse:collapse;background:#fff;border:1px solid var(--line);font-size:13px}
 .summary th,.summary td{padding:8px 10px;border-bottom:1px solid var(--line);text-align:left;vertical-align:top}
 .summary th{background:var(--lav)}
+a.btn{text-decoration:none;display:inline-block}
+.submit{max-width:1400px;margin:0 auto 80px;padding:24px;display:flex;gap:20px;align-items:center;justify-content:space-between;flex-wrap:wrap;background:var(--lav);border-radius:16px;border:1px solid var(--lav2)}
+.submit{margin-left:auto;margin-right:auto;width:calc(100% - 48px)}
+.submit h2{margin:0 0 4px;color:var(--navy);font-size:20px}
+.btn.big{padding:14px 22px;font-size:16px}
+#submitWarn{color:#9a4b00;font-weight:600}
 .lightbox{position:fixed;inset:0;background:rgba(16,14,43,.92);z-index:50;display:flex;align-items:center;justify-content:center}
 .lightbox[hidden]{display:none}
 .lightbox figure{margin:0;text-align:center}
