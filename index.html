@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>Image Revamp Approval</title>
-<link rel="stylesheet" href="style.css?v=3">
+<link rel="stylesheet" href="style.css?v=4">
 </head>
 <body>
 <header class="top">
@@ -30,10 +30,14 @@
 <section class="submit" id="submitBox">
   <div>
     <h2>Done? Send your choices</h2>
-    <p class="muted">This opens your email app with a ready message to Vatsal containing your approvals and comments. Just press Send.</p>
+    <p class="muted">Pick one way: open a ready email in Outlook, or download your choices as a text file and share it with Vatsal (email, Teams or chat).</p>
     <p class="muted" id="submitWarn"></p>
   </div>
-  <button class="btn big" id="btnSubmit">Send my choices to Vatsal</button>
+  <div class="submit-btns">
+    <button class="btn big" id="btnSubmit">Email via Outlook app</button>
+    <button class="btn big alt" id="btnOwa">Email via Outlook web</button>
+    <button class="btn big ghost" id="btnTxt">Download choices (.txt)</button>
+  </div>
 </section>
 <div class="lightbox" id="lb" hidden>
   <button class="lb-close" id="lbClose" aria-label="Close">&times;</button>
@@ -42,7 +46,7 @@
   <button class="lb-nav next" id="lbNext" aria-label="Next">&#8250;</button>
 </div>
 <div class="toast" id="toast"></div>
-<script src="data.js?v=3"></script>
-<script src="app.js?v=3"></script>
+<script src="data.js?v=4"></script>
+<script src="app.js?v=4"></script>
 </body>
 </html>

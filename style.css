@@ -62,6 +62,8 @@ a.btn{text-decoration:none;display:inline-block}
 .submit{margin-left:auto;margin-right:auto;width:calc(100% - 48px)}
 .submit h2{margin:0 0 4px;color:var(--navy);font-size:20px}
 .btn.big{padding:14px 22px;font-size:16px}
+.btn.alt{background:var(--navy)}.btn.alt:hover{background:#26224f}
+.submit-btns{display:flex;gap:10px;flex-wrap:wrap}
 #submitWarn{color:#9a4b00;font-weight:600}
 .lightbox{position:fixed;inset:0;background:rgba(16,14,43,.92);z-index:50;display:flex;align-items:center;justify-content:center}
 .lightbox[hidden]{display:none}

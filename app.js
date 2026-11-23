@@ -163,13 +163,35 @@
     const left = SLOTS.filter((s) => !decided(s)).length;
     $('#submitWarn').textContent = left ? `${left} slot${left > 1 ? 's' : ''} not decided yet (you can still send).` : '';
   }
-  $('#btnSubmit').onclick = () => {
-    if (!st.reviewer) {
-      const n = prompt('Your name (so Vatsal knows who sent this):', '');
-      if (n === null) return;
-      st.reviewer = n.trim(); $('#reviewer').value = st.reviewer; save();
+  function askName() {
+    if (st.reviewer) return true;
+    const n = prompt('Your name (so Vatsal knows who sent this):', '');
+    if (n === null) return false;
+    st.reviewer = n.trim(); $('#reviewer').value = st.reviewer; save();
+    return true;
+  }
+  const subjectLine = () => `Image revamp approvals - ${st.reviewer || 'reviewer'}`;
+  $('#btnTxt').onclick = () => {
+    if (!askName()) return;
+    const a = document.createElement('a');
+    a.href = URL.createObjectURL(new Blob([submitText().replace(/\n/g, '\r\n')], { type: 'text/plain' }));
+    a.download = `image-approvals-${(st.reviewer || 'reviewer').replace(/[^\w-]+/g, '-')}.txt`;
+    a.click();
+    toast('Downloaded - share this file with Vatsal');
+  };
+  $('#btnOwa').onclick = () => {
+    if (!askName()) return;
+    const full = submitText();
+    let body = full;
+    if (full.length > 1500) {
+      body = 'My full list is on the clipboard - please paste it below (Ctrl+V).\n\n';
+      if (navigator.clipboard) navigator.clipboard.writeText(full).then(() => toast('List copied - paste it into the email'), () => prompt('Copy this into the email:', full));
     }
-    const subject = `Image revamp approvals - ${st.reviewer || 'reviewer'}`;
+    window.open(`https://outlook.office.com/mail/deeplink/compose?to=${encodeURIComponent(TO)}&subject=${encodeURIComponent(subjectLine())}&body=${encodeURIComponent(body)}`, '_blank');
+  };
+  $('#btnSubmit').onclick = () => {
+    if (!askName()) return;
+    const subject = subjectLine();
     let body = submitText();
     const full = body;
     let url = `mailto:${TO}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
