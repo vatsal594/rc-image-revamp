@@ -1,0 +1,39 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Image Revamp Approval</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<header class="top">
+  <div class="brand">
+    <span class="logo">RC</span>
+    <div>
+      <h1>Website image revamp</h1>
+      <p class="muted">Click every image you approve (one or more per slot). Choices save in this browser; download or copy them when done.</p>
+    </div>
+  </div>
+  <div class="actions">
+    <input id="reviewer" placeholder="Your name" aria-label="Reviewer name">
+    <div class="progress"><div class="bar"><span id="barfill"></span></div><b id="prog">0 / 0</b></div>
+    <button class="btn ghost" id="btnReset">Reset</button>
+    <button class="btn ghost" id="btnCopy">Copy summary</button>
+    <button class="btn" id="btnExport">Download CSV</button>
+  </div>
+</header>
+<nav class="tabs" id="tabs"></nav>
+<main id="slots"></main>
+<section class="summary" id="summary"></section>
+<div class="lightbox" id="lb" hidden>
+  <button class="lb-close" id="lbClose" aria-label="Close">&times;</button>
+  <button class="lb-nav prev" id="lbPrev" aria-label="Previous">&#8249;</button>
+  <figure><img id="lbImg" alt=""><figcaption id="lbCap"></figcaption></figure>
+  <button class="lb-nav next" id="lbNext" aria-label="Next">&#8250;</button>
+</div>
+<div class="toast" id="toast"></div>
+<script src="data.js"></script>
+<script src="app.js"></script>
+</body>
+</html>
