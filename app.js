@@ -1,9 +1,10 @@
 (function () {
   const SLOTS = window.SLOTS || [];
   const KEY = 'rc-image-approval-v1';
-  let st = { picks: {}, notes: {}, none: {}, more: {}, reviewer: '' };
+  let st = { picks: {}, notes: {}, none: {}, more: {}, keep: {}, reviewer: '' };
   try { st = Object.assign(st, JSON.parse(localStorage.getItem(KEY) || '{}')); } catch (e) {}
   st.more = st.more || {};
+  st.keep = st.keep || {};
   Object.keys(st.picks).forEach((k) => { if (!Array.isArray(st.picks[k])) st.picks[k] = [st.picks[k]]; });
   const picksOf = (code) => st.picks[code] || [];
   const save = () => { try { localStorage.setItem(KEY, JSON.stringify(st)); } catch (e) {} };
@@ -14,7 +15,7 @@
 
   const shape = (s) => (/2368|2560|2264/.test(s.title) ? 'wide' : /844x1024/.test(s.title) ? 'tall' : '');
   const chipCls = (x) => (x === 'Matte' ? 'matte' : x === 'With people' ? 'people' : '');
-  const decided = (s) => picksOf(s.code).length > 0 || !!st.none[s.code] || !!st.more[s.code];
+  const decided = (s) => picksOf(s.code).length > 0 || !!st.none[s.code] || !!st.more[s.code] || !!st.keep[s.code];
 
   function renderTabs() {
     const t = $('#tabs');
@@ -44,7 +45,8 @@
       }
       const pick = picksOf(s.code);
       const parts = [];
-      if (st.none[s.code]) parts.push('<span class="status no">None is good</span>');
+      if (st.keep[s.code]) parts.push('<span class="status keep">Keep current</span>');
+      if (st.none[s.code]) parts.push('<span class="status no">None of the new ones is good</span>');
       else if (pick.length) parts.push(`<span class="status ok">Approved: ${pick.length > 1 ? 'options' : 'option'} ${esc(pick.join(', '))}</span>`);
       if (st.more[s.code]) parts.push('<span class="status more">Generate more</span>');
       const status = parts.length ? parts.join(' ') : '<span class="status">Not decided</span>';
@@ -52,7 +54,8 @@
       el.className = 'slot ' + shape(s);
       el.innerHTML = `<div class="slot-h"><h3><span class="code">${esc(s.code)}</span>${esc(s.title)}</h3>${status}</div>
         <div class="grid"></div>
-        <div class="slot-f"><button class="none ${st.none[s.code] ? 'on' : ''}">None is good</button>
+        <div class="slot-f"><button class="keepbtn ${st.keep[s.code] ? 'on' : ''}">Keep current image</button>
+        <button class="none ${st.none[s.code] ? 'on' : ''}">None of the new ones is good</button>
         <button class="morebtn ${st.more[s.code] ? 'on' : ''}">Generate more</button>
         <textarea placeholder="Comment (optional)">${esc(st.notes[s.code] || '')}</textarea></div>`;
       const grid = el.querySelector('.grid');
@@ -60,10 +63,11 @@
         s.opts.map((o) => ({ src: o.src, cap: `${s.code} option ${o.opt} (${o.style})` })));
 
       const before = document.createElement('div');
-      before.className = 'tile before';
-      before.innerHTML = `<img loading="lazy" src="${esc(s.before)}" alt="Current image for ${esc(s.code)}">
-        <div class="meta"><span class="opt">Current</span><span class="chip matte">live today</span></div>`;
-      before.onclick = () => openLB(gallery, 0);
+      before.className = 'tile before' + (st.keep[s.code] ? ' sel' : '');
+      before.innerHTML = `<span class="tick">&#10003;</span><button class="zoom">Zoom</button><img loading="lazy" src="${esc(s.before)}" alt="Current image for ${esc(s.code)}">
+        <div class="meta"><span class="opt">Current</span><span class="chip matte">${st.keep[s.code] ? 'keep this' : 'live today'}</span></div>`;
+      const toggleKeep = () => { if (st.keep[s.code]) delete st.keep[s.code]; else st.keep[s.code] = true; save(); render(); };
+      before.onclick = (e) => { if (e.target.classList.contains('zoom')) { openLB(gallery, 0); return; } toggleKeep(); };
       grid.appendChild(before);
 
       s.opts.forEach((o, i) => {
@@ -82,6 +86,7 @@
         grid.appendChild(t);
       });
 
+      el.querySelector('.keepbtn').onclick = toggleKeep;
       el.querySelector('.none').onclick = () => {
         if (st.none[s.code]) delete st.none[s.code]; else { st.none[s.code] = true; delete st.picks[s.code]; }
         save(); render();
@@ -104,7 +109,7 @@
     return SLOTS.map((s) => {
       const p = picksOf(s.code);
       const os = s.opts.filter((x) => p.includes(x.opt));
-      return { code: s.code, page: s.page, slot: s.title, approved: st.none[s.code] ? 'NONE' : p.join(' + '),
+      return { code: s.code, page: s.page, slot: s.title, approved: [st.keep[s.code] ? 'KEEP CURRENT' : '', st.none[s.code] ? 'NONE OF NEW' : p.join(' + ')].filter(Boolean).join(' + '),
         more: st.more[s.code] ? 'YES' : '',
         style: os.map((o) => o.style).join(' + '), file: os.map((o) => o.src).join(' | '), comment: st.notes[s.code] || '' };
     });
@@ -126,7 +131,7 @@
   $('#reviewer').value = st.reviewer || '';
   $('#reviewer').oninput = (e) => { st.reviewer = e.target.value; save(); };
   $('#btnReset').onclick = () => {
-    if (confirm('Clear all approvals and comments?')) { st = { picks: {}, notes: {}, none: {}, more: {}, reviewer: st.reviewer }; save(); render(); }
+    if (confirm('Clear all approvals and comments?')) { st = { picks: {}, notes: {}, none: {}, more: {}, keep: {}, reviewer: st.reviewer }; save(); render(); }
   };
   $('#btnCopy').onclick = () => {
     const txt = `Image approvals${st.reviewer ? ' by ' + st.reviewer : ''}\n` +

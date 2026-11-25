@@ -50,6 +50,10 @@ main{max-width:1400px;margin:0 auto;padding:8px 24px 40px}
 .slot-f textarea{flex:1;min-width:220px;border:1px solid var(--line);border-radius:8px;padding:8px;font:inherit;font-size:13px;resize:vertical;min-height:38px}
 .none{border:1px solid var(--line);background:#fff;border-radius:8px;padding:8px 12px;cursor:pointer;font:inherit;font-size:13px}
 .none.on{background:#fdecec;border-color:#f3b4b4;color:#b42318}
+.keepbtn{border:1px solid var(--line);background:#fff;border-radius:8px;padding:8px 12px;cursor:pointer;font:inherit;font-size:13px}
+.keepbtn.on{background:#e9f9ef;border-color:#9fdcb5;color:#127a3a;font-weight:600}
+.status.keep{color:#127a3a;background:#e9f9ef;padding:2px 8px;border-radius:10px;margin-right:6px}
+.tile.before{cursor:pointer}
 .morebtn{border:1px solid var(--line);background:#fff;border-radius:8px;padding:8px 12px;cursor:pointer;font:inherit;font-size:13px}
 .morebtn.on{background:var(--lav);border-color:var(--v-l);color:var(--v-d);font-weight:600}
 .status.more{color:var(--v-d);background:var(--lav);padding:2px 8px;border-radius:10px;margin-left:6px}
